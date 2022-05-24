@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { setTheme } from '@/utils/index'
+import { setTheme } from '@/utils/theme'
 export default {
     name: "PageHead",
     props: {
