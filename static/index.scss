@@ -1,0 +1,30 @@
+$dark: #171717;
+
+//:root {
+//  --theme-bg: #fff;
+//  --theme-bg-1: $dark;
+//}
+//
+///* 暗黑：dark */
+//[data-theme='dark'] {
+//  --theme-bg: $dark;
+//  --theme-bg-1: #fff;
+//}
+
+/* 实现方式一 */
+:root {
+  --theme-bg: initial; // 背景色
+  --theme-bg-1: initial;
+}
+
+/*
+box-shadow: 0 30px 48px rgb(3 3 3 / 50%);
+border: 1px solid hsla(210,8%,51%,.09);*/
+
+
+body {
+  background-color: var(--theme-bg-2);
+  font-family: "Microsoft YaHei";
+  font-size:14px;
+  color:#333;
+}
