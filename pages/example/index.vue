@@ -3,11 +3,11 @@
     <PageHead :active="2"/>
     <div class="page-main">
       <ul class="gird">
-        <li v-for="item in 9" :key="item" class="gird-item" @click="turn">
+        <li v-for="item in examples" :key="item.id" class="gird-item" @click="turn(item.path)">
           <div id="d1">
             <div id="d2"></div>
             <div id="d4"></div>
-            {{item}}
+            {{item.label}}
             <div id="d3"></div>
             <div id="d5"></div>
           </div>
@@ -24,9 +24,60 @@
     components: {
       PageHead
     },
+    data() {
+      return {
+        examples: [
+          {
+            id: 1,
+            label: '购物车案例',
+            path: 'car'
+          },
+          {
+            id: 2,
+            label: '倒计时',
+            path: 'timecount'
+          },
+          {
+            id: 3,
+            label: '倒计时',
+            path: 'timecount'
+          },
+          {
+            id: 4,
+            label: '倒计时',
+            path: 'timecount'
+          },
+          {
+            id: 5,
+            label: '倒计时',
+            path: 'timecount'
+          },
+          {
+            id: 6,
+            label: '倒计时',
+            path: 'timecount'
+          },
+          {
+            id: 7,
+            label: '倒计时',
+            path: 'timecount'
+          },
+          {
+            id: 8,
+            label: '倒计时',
+            path: 'timecount'
+          },
+          {
+            id: 9,
+            label: '倒计时',
+            path: 'timecount'
+          }
+        ]
+      }
+    },
     methods: {
-      turn() {
-        this.$router.push({path: '/example/timecount'})
+      turn(path) {
+        this.$router.push({path: `/example/${path}`})
       }
     }
   }

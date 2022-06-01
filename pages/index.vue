@@ -64,6 +64,8 @@
                 <el-tag type="info" size="small" effect="dark" class="tag-item">vue</el-tag>
                 <el-tag type="warning" size="small" effect="dark" class="tag-item">react</el-tag>
                 <el-tag type="danger" size="small" effect="dark" class="tag-item">小程序</el-tag>
+                <el-tag type="success" size="small" effect="dark" class="tag-item">node</el-tag>
+                <el-tag type="warning" size="small" effect="dark" class="tag-item">后端</el-tag>
               </div>
             </div>
         </aside>

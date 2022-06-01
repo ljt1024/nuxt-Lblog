@@ -9,7 +9,7 @@
           <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"  active-text-color="#007fff">
             <el-menu-item index="1"><nuxt-link to="/">首页</nuxt-link></el-menu-item>
             <el-menu-item index="2"><nuxt-link :to="{name:'example'}">案例</nuxt-link></el-menu-item>
-            <el-menu-item index="3"><nuxt-link to="/">关于</nuxt-link></el-menu-item>
+            <el-menu-item index="3"><nuxt-link :to="{name:'about'}">关于</nuxt-link></el-menu-item>
             <el-menu-item index="4"><nuxt-link to="/">收藏</nuxt-link></el-menu-item>
             <el-menu-item index="5"><nuxt-link :to="{name:'timeLine'}">时间轴</nuxt-link></el-menu-item>
           </el-menu>
@@ -23,13 +23,33 @@
         </div>
         <div class="login">
           <el-button type="primary" size='small'>写文章</el-button>
-          <el-button type="primary" size='small'>登录</el-button>
+          <el-button type="primary" size='small' @click="login">登录</el-button>
           <div class="mode">
             <i class="el-icon-sunny theme" @click="changeTheme('dark')" v-if="mode === 'light'"></i>
             <i class="el-icon-moon theme" @click="changeTheme('light')" v-if="mode === 'dark'"></i>
           </div>
         </div>
     </div>
+    <el-dialog
+      title="登录"
+      :visible.sync="loginVisible"
+       width="30%"
+       >
+      <div>
+        <el-form :model="loginForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+          <el-form-item label="用户名" prop="pass">
+            <el-input type="text" v-model="loginForm.username" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="密码" prop="checkPass">
+            <el-input type="password" v-model="loginForm.password" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
+            <el-button @click="loginVisible = false">取 消</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+    </el-dialog>
     <el-backtop :bottom="100"></el-backtop>
   </div>
 </template>
@@ -41,8 +61,8 @@ export default {
     props: {
       active: {
         type: [String, Number],
-        default: '0'
-      }
+        default: '0',
+      },
     },
     data() {
       return {
@@ -50,6 +70,19 @@ export default {
         key: '',
         value: true,
         mode: 'light',
+        loginVisible: false,
+        loginForm: {
+          username: '',
+          password: ''
+        },
+        rules: {
+          username: [
+            { required: true, message: '请输入用户名', trigger: 'blur' }
+          ],
+          password: [
+            { required: true, message: '请输入密码', trigger: 'blur' }
+          ],
+        }
       }
     },
   mounted() {
@@ -69,6 +102,12 @@ export default {
         this.mode = mode
         localStorage.setItem('theme', mode)
         setTheme(this.mode)
+      },
+      login() {
+        this.loginVisible = true
+      },
+      submitForm() {
+
       }
     }
 }

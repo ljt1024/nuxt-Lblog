@@ -112,6 +112,7 @@
     width: 1200px;
     margin: 100px auto;
     border: 1px solid #ccc;
+    background-color: #fff;
     .total{
       display: flex;
       flex-direction: row-reverse;
