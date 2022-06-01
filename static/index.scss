@@ -28,3 +28,13 @@ body {
   font-size:14px;
   color:#333;
 }
+
+.page-main {
+  padding: 1.3rem 1rem;
+  max-width: 960px;
+  margin: 60px auto 0 auto;
+  .wrap {
+    background-color: #fff;
+    padding: 10px;
+  }
+}

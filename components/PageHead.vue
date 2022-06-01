@@ -8,7 +8,7 @@
         <div class="nav">
           <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"  active-text-color="#007fff">
             <el-menu-item index="1"><nuxt-link to="/">首页</nuxt-link></el-menu-item>
-            <el-menu-item index="2"><nuxt-link to="/">案例</nuxt-link></el-menu-item>
+            <el-menu-item index="2"><nuxt-link :to="{name:'example'}">案例</nuxt-link></el-menu-item>
             <el-menu-item index="3"><nuxt-link to="/">关于</nuxt-link></el-menu-item>
             <el-menu-item index="4"><nuxt-link to="/">收藏</nuxt-link></el-menu-item>
             <el-menu-item index="5"><nuxt-link :to="{name:'timeLine'}">时间轴</nuxt-link></el-menu-item>
@@ -77,12 +77,13 @@ export default {
 <style scoped lang="scss">
   .containder {
     background-color: var(--theme-bg);
-    border-bottom: 1px solid var(--theme-bg-3);
+    border-bottom: 1px solid var(--theme-border-3);
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 999;
+    z-index: 99999;
+    overflow: hidden;
     .header {
       background-color: var(--theme-bg);
       display: flex;

@@ -4,6 +4,7 @@ const logoTheme = '#333'
 const fileColor = 'hsla(0,0%,100%,0.08)'
 const border1  = '#c0c4cc'
 const border2 = '#e5e6eb'
+const border3  = '#f1f1f1'
 const shadow = '030px 48px rgb(3 3 3 / 50%)'
 const bg2 = '#f4f5f5'
 const bg3 = '#202020'
@@ -26,6 +27,7 @@ export const getThemeMap = (isLight) => {
     'theme-file-1': isLight ? lightTheme : fileColor,
     'theme-border-1': isLight ? border1 : fileColor,
     'theme-border-2': isLight ? border2 : fileColor,
+    'theme-border-3': isLight ? border3 : fileColor,
     'theme-shadow': isLight ? '' : shadow,
     'color-font-1': isLight ? font1 : lightTheme,
     'color-font-2': isLight ? font2 : lightTheme,
