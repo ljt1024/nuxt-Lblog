@@ -29,7 +29,7 @@
       let index = 0
       this.timer = setInterval(()=> {
           if(this.text1[index] === '<') {
-            this.text2 += `<a href="https://github.com/ljt1024/nuxt-Lblog" style="color: #007fff;">github地址</a>`
+            this.text2 += `<a href="https://github.com/ljt1024/nuxt-Lblog" style="color: #007fff;" target="_blank">github地址</a>`
             clearInterval(this.timer)
             return
           }

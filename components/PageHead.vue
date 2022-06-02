@@ -1,5 +1,5 @@
 <template>
-  <div class="containder">
+  <div class="container">
     <div class="header">
         <div class="logo">
           <img src="../static/images/logo.png" alt="">
@@ -33,22 +33,24 @@
     <el-dialog
       title="登录"
       :visible.sync="loginVisible"
-       width="30%"
-       >
+      :center="true"
+      :modal-append-to-body="false"
+      class="loginDialog"
+    >
       <div>
-        <el-form :model="loginForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        <el-form :model="loginForm" status-icon :rules="rules" ref="ruleForm" label-width="60px" class="loginForm">
           <el-form-item label="用户名" prop="pass">
             <el-input type="text" v-model="loginForm.username" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="密码" prop="checkPass">
             <el-input type="password" v-model="loginForm.password" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
-            <el-button @click="loginVisible = false">取 消</el-button>
-          </el-form-item>
         </el-form>
       </div>
+      <span slot="footer" class="dialog-footer">
+         <el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
+         <el-button @click="loginVisible = false">取 消</el-button>
+      </span>
     </el-dialog>
     <el-backtop :bottom="100"></el-backtop>
   </div>
@@ -114,14 +116,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .containder {
+  .container {
     background-color: var(--theme-bg);
     border-bottom: 1px solid var(--theme-border-3);
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 99999;
+    z-index: 1;
     overflow: hidden;
     .header {
       background-color: var(--theme-bg);
@@ -184,6 +186,17 @@ export default {
             font-size: 20px;
             cursor: pointer;
           }
+        }
+      }
+    }
+    .loginDialog {
+      width: 700px;
+      margin: 0 auto;
+    }
+    ::v-deep .el-dialog__body {
+      .loginForm {
+        width: 100%;
+        .loginBtn {
         }
       }
     }

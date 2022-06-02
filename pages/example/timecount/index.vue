@@ -163,7 +163,8 @@ export default {
         beforesArr: [],
         balls: [],
         colors: ['#ffcc00','#ff00cc','#ccff00','#cc00ff','#00ffcc','#00ccff'],
-        timer: null
+        timer: null,
+        endTime: '18:30'
       }
     },
   beforeDestroy() {
@@ -265,7 +266,7 @@ export default {
         return  q.toString().split('')
       },
       loadTime() {
-        let s = Math.ceil((new Date(new Date().toLocaleDateString()+'/24:00').getTime() - new Date().getTime())/1000)
+        let s = Math.ceil((new Date(new Date().toLocaleDateString()+`/${this.endTime}`).getTime() - new Date().getTime())/1000)
         if(s<0) {
           return false
         }

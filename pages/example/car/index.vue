@@ -92,7 +92,7 @@
         this.multipleSelection = val;
       },
       handleChange(value) {
-        this.tableData[value.$index].total = value.row.price*value.row.number
+        this.tableData[value.$index].total = value.row.price * value.row.number
       },
       deleteShop(value) {
         this.tableData.splice(value.$index,1)
