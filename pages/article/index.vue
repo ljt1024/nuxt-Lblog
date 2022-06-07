@@ -2,8 +2,8 @@
   <div>
     <PageHead/>
     <div class="main">
-      <div class="wrap">
-        文章详情
+      <div class="wrap" v-if="article">
+        <div v-html="article.content"></div>
       </div>
     </div>
   </div>
@@ -15,6 +15,23 @@
     name: "index",
     components: {
       PageHead
+    },
+    data() {
+      return {
+        article: {}
+      }
+    },
+    async asyncData ({ route, $axios, error }) {
+      if (process.server) {
+        const myData  = await $axios.$get(`/api/articleList`)
+        return  {
+          article:myData[0]
+        }
+      }
+    },
+    async mounted() {
+      const myData = await this.$axios.$get(`/api/articleList`)
+      this.article = myData[0]
     },
   }
 </script>
