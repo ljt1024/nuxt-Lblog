@@ -24,9 +24,7 @@ export default function({ $axios, redirect }) {
      * You can also judge the status by HTTP Status Code
      */
     response => {
-      console.log(1111);
       const res = response.data
-
       if (res.code === 200) {
         return res
       } else {

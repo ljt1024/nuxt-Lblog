@@ -33,6 +33,10 @@ export default {
       src: "@/plugins/axios",
       ssr: false
     },
+    {
+      src: "@/plugins/vue2-editor.js",
+      ssr: false
+    }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

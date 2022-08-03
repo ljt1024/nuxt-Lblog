@@ -5,9 +5,33 @@
 </template>
 
 <script>
-    export default {
-        name: "index"
-    }
+export default {
+   name: "index",
+   beforeCreate() {
+
+   },
+   created() {
+
+   },
+   beforeMount() {
+
+   },
+   mounted() {
+
+   },
+   beforeUpdate() {
+
+   },
+   updated() {
+
+   },
+   beforeDestroy() {
+
+   },
+   destroyed() {
+
+   }
+}
 </script>
 
 <style scoped>

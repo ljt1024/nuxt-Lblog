@@ -59,13 +59,15 @@
             <div class="hot-tag">
               <div class="tag-tit">热门标签</div>
               <div class="tag-list">
-                <el-tag size="small" effect="dark" class="tag-item">前端</el-tag>
-                <el-tag type="success" size="small" effect="dark" class="tag-item">javascript</el-tag>
-                <el-tag type="info" size="small" effect="dark" class="tag-item">vue</el-tag>
-                <el-tag type="warning" size="small" effect="dark" class="tag-item">react</el-tag>
-                <el-tag type="danger" size="small" effect="dark" class="tag-item">小程序</el-tag>
-                <el-tag type="success" size="small" effect="dark" class="tag-item">node</el-tag>
-                <el-tag type="warning" size="small" effect="dark" class="tag-item">后端</el-tag>
+                <el-tag :type="type[index % type.length]"
+                        size="small"
+                        effect="dark"
+                        class="tag-item"
+                        v-for="(item, index) in tagList"
+                        :key="item.id">
+                  {{item.columnName}}
+                </el-tag>
+                <el-skeleton :rows="6" animated v-if="!tagList"/>
               </div>
             </div>
         </aside>
@@ -82,25 +84,31 @@ export default {
   components: {
     PageHead
   },
-  // async asyncData({ $axios }) {
-  //   const result = await $axios.$get('localhost:3002/api/articleList')
-  //   console.log(result);
-  // },
-  // async asyncData ({ route, $axios, error }) {
-  //   const  myData  = await $axios.$get(`/api/articleList`)
-  //   console.log(myData);
-  // },
-  mounted() {
+  async asyncData ({ route, $axios, error }) {
+    try {
+      if (process.server) {
+        const myData  = await $axios.$get(`/api/columnList`)
+        return  {
+          tagList:myData
+        }
+      }
+    }catch (e) {
+
+    }
+  },
+  async mounted() {
     timer = setInterval(()=>{
       this.date = new Date().toLocaleString()
     }, 1000)
     this.time = timeFix()
-    // let mode = localStorage.getItem('theme')
-    // if (mode) {
-    //   this.mode = localStorage.getItem('theme')
-    // } else {
-    //   localStorage.setItem('theme', this.mode)
-    // }
+    this.tagLoading = true
+    try {
+      const myData = await this.$axios.$get(`/api/columnList`)
+      this.tagList = myData
+      this.tagLoading = false
+    }catch (e) {
+      this.tagLoading = false
+    }
   },
   destroyed() {
     clearInterval(timer)
@@ -109,7 +117,9 @@ export default {
     return {
       date: new Date().toLocaleString(),
       time: '',
-      mode: 'light'
+      tagList: [],
+      type: ['default', 'success', 'info', 'warning', 'danger'],
+      tagLoading: false
     }
   },
   methods: {

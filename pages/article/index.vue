@@ -3,7 +3,22 @@
     <PageHead/>
     <div class="main">
       <div class="wrap" v-if="article">
-        <div v-html="article.content"></div>
+        <h1 class="tit">js手写Promise11</h1>
+        <div class="author">
+          <a href="#">
+            <img src="../../static/images/logo.png" alt=""/>
+          </a>
+          <div>
+            <a href="" class="username">
+              ljt
+            </a>
+            <div class="btm">
+              <span class="time">2022年08月02日 08:29</span>
+              <span class="">阅读数：100</span>
+            </div>
+          </div>
+        </div>
+        <div style="white-space:pre-wrap">{{article.content}}</div>
       </div>
     </div>
   </div>
@@ -24,6 +39,7 @@
     async asyncData ({ route, $axios, error }) {
       if (process.server) {
         const myData  = await $axios.$get(`/api/articleList`)
+        console.log(myData[0]);
         return  {
           article:myData[0]
         }
@@ -43,7 +59,43 @@
     margin: 60px auto 0 auto;
     .wrap {
       background-color: #fff;
-      padding: 10px;
+      padding: 2.667rem 2rem 3.33rem;
+      color: #595959;
+      font-size: 15px;
+      font-family: -apple-system,system-ui,BlinkMacSystemFont,Helvetica Neue,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Arial,sans-serif;
+      background-image: linear-gradient(90deg,rgba(60,10,30,.04) 3%,transparent 0),linear-gradient(1turn,rgba(60,10,30,.04) 3%,transparent 0);
+      background-size: 20px 20px;
+      background-position: 50%;
+    }
+    .tit {
+      margin: 0 0 1.667rem;
+      font-size: 2.667rem;
+      font-weight: 600;
+      line-height: 1.31;
+      color: #252933;
+    }
+    .author {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.667rem;
+      img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+      .username {
+        font-size: 1.333rem;
+        font-weight: 500;
+        color: #515767;
+        line-height: 2rem;
+      }
+      .btm {
+        font-size: 1.167rem;
+        color: #8a919f;
+        margin-top: 2px;
+        line-height: 22px;
+      }
     }
   }
 </style>
