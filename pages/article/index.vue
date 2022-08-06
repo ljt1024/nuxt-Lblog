@@ -3,7 +3,7 @@
     <PageHead/>
     <div class="main">
       <div class="wrap" v-if="article">
-        <h1 class="tit">js手写Promise11</h1>
+        <h1 class="tit">{{article.title}}</h1>
         <div class="author">
           <a href="#">
             <img src="../../static/images/logo.png" alt=""/>
@@ -13,7 +13,7 @@
               ljt
             </a>
             <div class="btm">
-              <span class="time">2022年08月02日 08:29</span>
+              <span class="time">{{article.creatTime}}</span>
               <span class="">阅读数：100</span>
             </div>
           </div>
@@ -37,17 +37,10 @@
       }
     },
     async asyncData ({ route, $axios, error }) {
-      if (process.server) {
-        const myData  = await $axios.$get(`/api/articleList`)
-        console.log(myData[0]);
-        return  {
-          article:myData[0]
+      const myData  = await $axios.$get(`/api/articleList/?id=${route.query.id}`)
+      return  {
+          article:myData.data[0]
         }
-      }
-    },
-    async mounted() {
-      const myData = await this.$axios.$get(`/api/articleList`)
-      this.article = myData[0]
     },
   }
 </script>

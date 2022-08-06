@@ -6,13 +6,26 @@
           <span class="logo-txt">LBlog</span>
         </div>
         <div class="nav">
-          <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"  active-text-color="#007fff">
+          <el-menu :default-active="activeIndex" class="el-menu-nav" mode="horizontal" @select="handleSelect"  active-text-color="#007fff">
             <el-menu-item index="1"><nuxt-link to="/">首页</nuxt-link></el-menu-item>
             <el-menu-item index="2"><nuxt-link :to="{name:'example'}">案例</nuxt-link></el-menu-item>
             <el-menu-item index="3"><nuxt-link :to="{name:'about'}">关于</nuxt-link></el-menu-item>
             <el-menu-item index="4"><nuxt-link to="/">收藏</nuxt-link></el-menu-item>
             <el-menu-item index="5"><nuxt-link :to="{name:'timeLine'}">时间轴</nuxt-link></el-menu-item>
           </el-menu>
+        </div>
+        <div class="nav-drop">
+          <el-dropdown>
+            <span class="el-dropdown-link">
+              <nuxt-link to="/">首页</nuxt-link><i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item><nuxt-link :to="{name:'example'}">案例</nuxt-link></el-dropdown-item>
+              <el-dropdown-item><nuxt-link :to="{name:'about'}">关于</nuxt-link></el-dropdown-item>
+              <el-dropdown-item><nuxt-link to="/">收藏</nuxt-link></el-dropdown-item>
+              <el-dropdown-item><nuxt-link :to="{name:'timeLine'}">时间轴</nuxt-link></el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </div>
         <div class="search">
             <el-input
@@ -150,7 +163,7 @@ export default {
         .el-menu-item {
           padding: 0 !important;
         }
-        .el-menu-demo {
+        .el-menu-nav {
           background-color: var(--theme-bg);
         }
         ::v-deep .el-menu.el-menu--horizontal {
@@ -165,6 +178,26 @@ export default {
         a {
           display: inline-block;
           padding: 0 20px;
+        }
+      }
+      .nav-drop {
+        width: 250px;
+      }
+      @media screen and (max-width:1015px) {
+          .nav {
+            .el-menu-nav {
+              display: none;
+            }
+          }
+      }
+      @media screen and (min-width:1015px) {
+        .nav {
+          .el-menu-nav {
+            display: block;
+          }
+        }
+        .nav-drop {
+          display: none;
         }
       }
       .search {

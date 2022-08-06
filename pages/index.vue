@@ -11,41 +11,42 @@
             </ul>
           </div>
           <div class="list">
+<!--            <el-skeleton :rows="6" animated :loading="articleList.length === 0"/>-->
             <ul>
-              <li class="item" v-for="item in 10" :key="item" @click="turnDetail">
+              <li class="item" v-for="item in articleList" :key="item.id" @click="turnDetail(item.id)">
                   <div class="release-info">
                     <ul>
-                      <li class="user">ljt</li>
+                      <li class="user">{{item.author}}</li>
                       <li class="date">1天前</li>
-                      <li class="tag">前端</li>
+                      <li class="tag">{{item.category}}</li>
                     </ul>
                   </div>
                   <div class="main">
                     <div class="content-main">
                       <div class="title">
-                        JS数据类型转换
+                        {{item.title}}
                       </div>
                       <div class="abstract">
-                        JS数据类型转换 基本概念 基本数据类型转换 一. 转为数值类型(Number) Number():如果要转换的字符串中有一个不是数值的字符，返回NaN parseInt():如果要转换的字符串中有一
+                        {{item.abstract}}
                       </div>
                       <div class="action-list">
                           <ul>
                             <li>
                               <i class="el-icon-view"></i>
-                              <span>80</span>
+                              <span>{{item.readNum}}</span>
                             </li>
                             <li>
                               <i class="el-icon-thumb"></i>
-                              <span>22</span>
+                              <span>{{item.thumbs}}</span>
                             </li>
                               <li>
                               <i class="el-icon-chat-round"></i>
-                              <span>8</span>
+                              <span>{{item.comments}}</span>
                             </li>
                           </ul>
                       </div>
                     </div>
-                    <img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/18613c4c23ec4d74bdaa034c8f9eae43~tplv-k3u1fbpfcp-no-mark:240:240:240:160.awebp?" alt="" class="lazy thumb">
+                    <img :src="item.img" alt="" class="lazy thumb">
                   </div>
               </li>
             </ul>
@@ -85,15 +86,16 @@ export default {
     PageHead
   },
   async asyncData ({ route, $axios, error }) {
+    // console.log(process.server);
     try {
-      if (process.server) {
         const myData  = await $axios.$get(`/api/columnList`)
-        return  {
-          tagList:myData
+        const articleList = await $axios.$get(`/api/articleList`)
+         return  {
+          tagList:myData.data,
+          articleList: articleList.data,
         }
-      }
     }catch (e) {
-
+      console.log(e);
     }
   },
   async mounted() {
@@ -102,15 +104,8 @@ export default {
     }, 1000)
     this.time = timeFix()
     this.tagLoading = true
-    try {
-      const myData = await this.$axios.$get(`/api/columnList`)
-      this.tagList = myData
-      this.tagLoading = false
-    }catch (e) {
-      this.tagLoading = false
-    }
   },
-  destroyed() {
+  beforeDestroy() {
     clearInterval(timer)
   },
   data() {
@@ -119,12 +114,14 @@ export default {
       time: '',
       tagList: [],
       type: ['default', 'success', 'info', 'warning', 'danger'],
-      tagLoading: false
+      articleList: [],
+      tagLoading: false,
+      listSkeleton: true
     }
   },
   methods: {
-    turnDetail() {
-      this.$router.push({path: '/article'})
+    turnDetail(id) {
+      this.$router.push({path: '/article', query: {id}})
     }
   }
 }
@@ -229,6 +226,7 @@ export default {
           margin-top: 6px;
           padding-bottom: 12px;
           display: flex;
+          justify-content: space-between;
           border-bottom: 1px solid var(--theme-border-2);
           .title {
             font-weight: 700;

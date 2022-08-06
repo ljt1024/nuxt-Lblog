@@ -26,7 +26,7 @@ export default function({ $axios, redirect }) {
     response => {
       const res = response.data
       if (res.code === 200) {
-        return res
+        return response
       } else {
         redirect('/404')
         // if the custom code is not 200, it is judged as an error.
