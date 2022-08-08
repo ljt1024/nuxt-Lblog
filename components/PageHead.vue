@@ -36,7 +36,13 @@
         </div>
         <div class="login">
           <el-button type="primary" size='small'>写文章</el-button>
-          <el-button type="primary" size='small' @click="login">登录</el-button>
+          <el-button type="primary" size='small' @click="login" v-if="!userInfo">登录</el-button>
+          <el-dropdown v-else @command="loginOut">
+            <img src="../static/images/avatar.png" alt="" class="avatar" >
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item icon="el-icon-switch-button" command="loginOut">退出</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
           <div class="mode">
             <i class="el-icon-sunny theme" @click="changeTheme('dark')" v-if="mode === 'light'"></i>
             <i class="el-icon-moon theme" @click="changeTheme('light')" v-if="mode === 'dark'"></i>
@@ -51,11 +57,11 @@
       class="loginDialog"
     >
       <div>
-        <el-form :model="loginForm" status-icon :rules="rules" ref="ruleForm" label-width="60px" class="loginForm">
-          <el-form-item label="用户名" prop="pass">
+        <el-form :model="loginForm" status-icon :rules="rules" ref="ruleForm" label-width="80px" class="loginForm">
+          <el-form-item label="用户名" prop="username">
             <el-input type="text" v-model="loginForm.username" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="密码" prop="checkPass">
+          <el-form-item label="密码" prop="password">
             <el-input type="password" v-model="loginForm.password" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
@@ -71,6 +77,7 @@
 
 <script>
 import { setTheme } from '@/utils/theme'
+import md5 from 'js-md5'
 export default {
     name: "PageHead",
     props: {
@@ -92,15 +99,17 @@ export default {
         },
         rules: {
           username: [
-            { required: true, message: '请输入用户名', trigger: 'blur' }
+            { required: true, message: '请输入用户名', trigger: ['blur', 'change'] }
           ],
           password: [
-            { required: true, message: '请输入密码', trigger: 'blur' }
+            { required: true, message: '请输入密码', trigger: ['blur', 'change'] }
           ],
-        }
+        },
+        userInfo: {}
       }
     },
   mounted() {
+    this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
     let mode = localStorage.getItem('theme')
     if (mode) {
       this.mode = localStorage.getItem('theme')
@@ -122,7 +131,51 @@ export default {
         this.loginVisible = true
       },
       submitForm() {
-
+        this.$refs['ruleForm'].validate((valid) => {
+          if (valid) {
+            this.$axios.$post(`/api/user/login`, {username:this.loginForm.username, password: md5(this.loginForm.password)}).then(res=>{
+              console.log(res);
+              localStorage.setItem('token', res.data.token)
+              if (res.data.token) {
+                this.getUser(res.data.token)
+              }
+            })
+          } else {
+            return false;
+          }
+        });
+      },
+      getUser() {
+        this.$axios.$get('/api/user/profile').then(res => {
+          this.loginVisible = false
+          this.$notify({
+            title: '提示',
+            message: '登录成功',
+            type: 'success'
+          });
+         localStorage.setItem('userInfo', JSON.stringify(res.data.user))
+         window.location.reload()
+        })
+      },
+      loginOut(command) {
+        this.$confirm('是否退出当前账号, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          localStorage.removeItem('userInfo')
+          localStorage.removeItem('token')
+          this.$message({
+            type: 'success',
+            message: '已退出!'
+          });
+          window.location.reload()
+        }).catch(() => {
+          this.$message({
+            type: 'success',
+            message: '已取消!'
+          });
+        });
       }
     }
 }
@@ -219,6 +272,12 @@ export default {
             font-size: 20px;
             cursor: pointer;
           }
+        }
+        .avatar {
+          width: 30px;
+          height: 30  px;
+          margin-left: 10px;
+          cursor: pointer;
         }
       }
     }

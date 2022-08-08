@@ -1,9 +1,13 @@
+import { Message } from 'element-ui'
 export default function({ $axios, redirect }) {
   // request interceptor
   $axios.interceptors.request.use(
 
     config => {
       // do something before request is sent
+      if (localStorage.getItem('token')) {
+        config.headers['Authorization'] = localStorage.getItem('token')
+      }
       return config
     },
     error => {
@@ -28,7 +32,7 @@ export default function({ $axios, redirect }) {
       if (res.code === 200) {
         return response
       } else {
-        redirect('/404')
+        Message.error(response.data.msg)
         // if the custom code is not 200, it is judged as an error.
       }
       return Promise.reject(new Error(res.msg || 'Error'))
