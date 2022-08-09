@@ -16,6 +16,10 @@ const font5 = '#86909c' // 文章描述
 const font6 = '#9fa8b1'
 const font7 = '#4e5969'
 const font8 = '#999ea5'
+const font9 = '#595959'  // 文章详情颜色
+const font10 = '#252933' // 文章详情标题色
+const font11= '#515767' // 文章详情作者
+const font12 = '#8a919f' // 文章详情阅读数
 // 获取对应的主题色值
 export const getThemeMap = (isLight) => {
   return {
@@ -35,6 +39,10 @@ export const getThemeMap = (isLight) => {
     'color-font-4': isLight ? font5 : font6,
     'color-font-5': isLight ? font5 : font6,
     'color-font-6': isLight ? font7 : font8,
+    'color-font-7': isLight ? font9 : font4,
+    'color-font-8': isLight ? font10 : font4,
+    'color-font-9': isLight ? font11 : font4,
+    'color-font-10': isLight ? font12 : font4,
   }
 }
 

@@ -51,9 +51,9 @@
     max-width: 960px;
     margin: 60px auto 0 auto;
     .wrap {
-      background-color: #fff;
+      background-color: var(--theme-bg-3);
       padding: 2.667rem 2rem 3.33rem;
-      color: #595959;
+      color: var(--color-font-7);
       font-size: 15px;
       font-family: -apple-system,system-ui,BlinkMacSystemFont,Helvetica Neue,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Arial,sans-serif;
       background-image: linear-gradient(90deg,rgba(60,10,30,.04) 3%,transparent 0),linear-gradient(1turn,rgba(60,10,30,.04) 3%,transparent 0);
@@ -65,7 +65,7 @@
       font-size: 2.667rem;
       font-weight: 600;
       line-height: 1.31;
-      color: #252933;
+      color: var(--color-font-8);
     }
     .author {
       display: flex;
@@ -80,12 +80,12 @@
       .username {
         font-size: 1.333rem;
         font-weight: 500;
-        color: #515767;
+        color: var(--color-font-9);
         line-height: 2rem;
       }
       .btm {
         font-size: 1.167rem;
-        color: #8a919f;
+        color: var(--color-font-10);
         margin-top: 2px;
         line-height: 22px;
       }

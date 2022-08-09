@@ -10,7 +10,8 @@
             <el-menu-item index="1"><nuxt-link to="/">首页</nuxt-link></el-menu-item>
             <el-menu-item index="2"><nuxt-link :to="{name:'example'}">案例</nuxt-link></el-menu-item>
             <el-menu-item index="3"><nuxt-link :to="{name:'about'}">关于</nuxt-link></el-menu-item>
-            <el-menu-item index="4"><nuxt-link to="/">收藏</nuxt-link></el-menu-item>
+<!--            <el-menu-item index="4"><nuxt-link to="/">收藏</nuxt-link></el-menu-item>-->
+            <el-menu-item index="4"><nuxt-link :to="{name:'chart'}">聊天室</nuxt-link></el-menu-item>
             <el-menu-item index="5"><nuxt-link :to="{name:'timeLine'}">时间轴</nuxt-link></el-menu-item>
           </el-menu>
         </div>
@@ -22,7 +23,8 @@
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item><nuxt-link :to="{name:'example'}">案例</nuxt-link></el-dropdown-item>
               <el-dropdown-item><nuxt-link :to="{name:'about'}">关于</nuxt-link></el-dropdown-item>
-              <el-dropdown-item><nuxt-link to="/">收藏</nuxt-link></el-dropdown-item>
+<!--              <el-dropdown-item><nuxt-link to="/">收藏</nuxt-link></el-dropdown-item>-->
+              <el-dropdown-item><nuxt-link :to="{name:'chart'}">聊天室</nuxt-link></el-dropdown-item>
               <el-dropdown-item><nuxt-link :to="{name:'timeLine'}">时间轴</nuxt-link></el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -35,14 +37,16 @@
             </el-input>
         </div>
         <div class="login">
-          <el-button type="primary" size='small'>写文章</el-button>
-          <el-button type="primary" size='small' @click="login" v-if="!userInfo">登录</el-button>
-          <el-dropdown v-else @command="loginOut">
-            <img src="../static/images/avatar.png" alt="" class="avatar" >
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item icon="el-icon-switch-button" command="loginOut">退出</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
+          <el-button type="primary" size='small' @click="toWrite">写文章</el-button>
+          <client-only>
+            <el-button type="primary" size='small' @click="login" v-if="!userInfo">登录</el-button>
+            <el-dropdown @command="loginOut" v-else>
+              <img src="../static/images/avatar.png" alt="" class="avatar" >
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item icon="el-icon-switch-button" command="loginOut">退出</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </client-only>
           <div class="mode">
             <i class="el-icon-sunny theme" @click="changeTheme('dark')" v-if="mode === 'light'"></i>
             <i class="el-icon-moon theme" @click="changeTheme('light')" v-if="mode === 'dark'"></i>
@@ -110,6 +114,11 @@ export default {
     },
   mounted() {
     this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    if (localStorage.getItem('token')) {
+      this.$axios.$get('/api/user/profile').then(res => {
+
+      })
+    }
     let mode = localStorage.getItem('theme')
     if (mode) {
       this.mode = localStorage.getItem('theme')
@@ -154,7 +163,9 @@ export default {
             type: 'success'
           });
          localStorage.setItem('userInfo', JSON.stringify(res.data.user))
-         window.location.reload()
+          setTimeout(()=>{
+            window.location.reload()
+          }, 500)
         })
       },
       loginOut(command) {
@@ -169,13 +180,25 @@ export default {
             type: 'success',
             message: '已退出!'
           });
-          window.location.reload()
+          setTimeout(()=>{
+            window.location.reload()
+          },500)
         }).catch(() => {
           this.$message({
             type: 'success',
             message: '已取消!'
           });
         });
+      },
+      toWrite() {
+        if (localStorage.getItem('token')) {
+            this.$router.push('write')
+        } else {
+          this.$message({
+            type: 'warning',
+            message: '未登录!'
+          });
+        }
       }
     }
 }

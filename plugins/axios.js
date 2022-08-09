@@ -31,15 +31,21 @@ export default function({ $axios, redirect }) {
       const res = response.data
       if (res.code === 200) {
         return response
+      } else if (res.code === 205){
+        Message.error(response.data.msg)
+        localStorage.removeItem('token')
+        localStorage.removeItem('userInfo')
+        setTimeout(()=>{
+          window.location.reload()
+        },500)
+        // if the custom code is not 200, it is judged as an error.
       } else {
         Message.error(response.data.msg)
-        // if the custom code is not 200, it is judged as an error.
       }
       return Promise.reject(new Error(res.msg || 'Error'))
     },
     error => {
       console.log('err' + error) // for debug
-
       return Promise.reject(error)
     }
   )
