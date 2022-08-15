@@ -2,7 +2,7 @@
   <div>
     <PageHead/>
     <div class="main">
-      <div class="wrap" v-if="article">
+      <div class="wrap" >
         <h1 class="tit">{{article.title}}</h1>
         <div class="author">
           <a href="#">

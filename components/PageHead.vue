@@ -11,7 +11,7 @@
             <el-menu-item index="2"><nuxt-link :to="{name:'example'}">案例</nuxt-link></el-menu-item>
             <el-menu-item index="3"><nuxt-link :to="{name:'about'}">关于</nuxt-link></el-menu-item>
 <!--            <el-menu-item index="4"><nuxt-link to="/">收藏</nuxt-link></el-menu-item>-->
-            <el-menu-item index="4"><nuxt-link :to="{name:'chart'}">聊天室</nuxt-link></el-menu-item>
+            <el-menu-item index="4"><nuxt-link :to="{name:'chart'}" :nuxt-child-key="new Date()">聊天室</nuxt-link></el-menu-item>
             <el-menu-item index="5"><nuxt-link :to="{name:'timeLine'}">时间轴</nuxt-link></el-menu-item>
           </el-menu>
         </div>
@@ -24,7 +24,7 @@
               <el-dropdown-item><nuxt-link :to="{name:'example'}">案例</nuxt-link></el-dropdown-item>
               <el-dropdown-item><nuxt-link :to="{name:'about'}">关于</nuxt-link></el-dropdown-item>
 <!--              <el-dropdown-item><nuxt-link to="/">收藏</nuxt-link></el-dropdown-item>-->
-              <el-dropdown-item><nuxt-link :to="{name:'chart'}">聊天室</nuxt-link></el-dropdown-item>
+              <el-dropdown-item><nuxt-link :to="{name:'chart'}" :nuxt-child-key="new Date()">聊天室</nuxt-link></el-dropdown-item>
               <el-dropdown-item><nuxt-link :to="{name:'timeLine'}">时间轴</nuxt-link></el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>

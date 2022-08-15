@@ -1,87 +1,44 @@
 <template>
   <div>
     <PageHead :active="4"/>
-    <div class="page-main">
-       <div class="chart-wrap">
-         <div :class="item.sendId === userInfo.id ?['chart-right', 'chart-info'] : ['chart-left', 'chart-info']" v-for="(item, index) in chartList" :key="item.id">
-           <template v-if="item.sendId === userInfo.id">
-             <div class="chart-content-wrap">
-               <div class="username">{{item.username}}</div>
-               <div class="chart-content">{{item.content}}</div>
-             </div>
-             <img src="../../static/images/logo.png" alt="" class="user-avatar">
-           </template>
-           <template v-else>
-             <img src="../../static/images/logo.png" alt="" class="user-avatar">
-             <div class="chart-content-wrap">
-               <div class="username">{{item.username}}</div>
-               <div class="chart-content">{{item.content}}</div>
-             </div>
-           </template>
+      <div class="page-main">
+        <div class="online">
+          当前在线人数：{{count}}
+        </div>
+        <transition name="slide-fade">
+          <div class="tip" v-show="time">{{tip}}</div>
+        </transition>
+         <div class="chart-wrap" >
+           <div :class="item.sendId === userInfo.id ?['chart-right', 'chart-info'] : ['chart-left', 'chart-info']" v-for="(item, index) in chartList" :key="item.id">
+             <template v-if="item.sendId === userInfo.id">
+               <div class="chart-content-wrap">
+                 <div class="username">{{item.username}}</div>
+                 <div class="chart-content">{{item.content}}</div>
+               </div>
+               <img src="../../static/images/logo.png" alt="" class="user-avatar">
+             </template>
+             <template v-else>
+               <img src="../../static/images/logo.png" alt="" class="user-avatar">
+               <div class="chart-content-wrap">
+                 <div class="username">{{item.username}}</div>
+                 <div class="chart-content">{{item.content}}</div>
+               </div>
+             </template>
+           </div>
          </div>
-<!--        <div class="chart-left chart-info">-->
-<!--          <img src="../../static/images/logo.png" alt="" class="user-avatar">-->
-<!--          <div class="chart-content-wrap">-->
-<!--            <div class="username">111</div>-->
-<!--            <div class="chart-content">122221312312312321312</div>-->
-<!--          </div>-->
-<!--        </div>-->
-         <!--         <div class="chart-right chart-info">-->
-<!--           <div class="chart-content-wrap">-->
-<!--             <div class="username">ljt</div>-->
-<!--             <div class="chart-content">44224</div>-->
-<!--           </div>-->
-<!--           <img src="../../static/images/logo.png" alt="" class="user-avatar">-->
-<!--         </div>-->
-<!--         <div class="chart-left chart-info">-->
-<!--           <img src="../../static/images/logo.png" alt="" class="user-avatar">-->
-<!--           <div class="chart-content-wrap">-->
-<!--             <div class="username">111</div>-->
-<!--             <div class="chart-content">122221312312312321312</div>-->
-<!--           </div>-->
-<!--         </div>-->
-<!--         <div class="chart-left chart-info">-->
-<!--           <img src="../../static/images/logo.png" alt="" class="user-avatar">-->
-<!--           <div class="chart-content-wrap">-->
-<!--             <div class="username">111</div>-->
-<!--             <div class="chart-content">122221312312312321312</div>-->
-<!--           </div>-->
-<!--         </div>-->
-<!--         <div class="chart-left chart-info">-->
-<!--           <img src="../../static/images/logo.png" alt="" class="user-avatar">-->
-<!--           <div class="chart-content-wrap">-->
-<!--             <div class="username">111</div>-->
-<!--             <div class="chart-content">122221312312312321312</div>-->
-<!--           </div>-->
-<!--         </div>-->
-<!--         <div class="chart-left chart-info">-->
-<!--           <img src="../../static/images/logo.png" alt="" class="user-avatar">-->
-<!--           <div class="chart-content-wrap">-->
-<!--             <div class="username">111</div>-->
-<!--             <div class="chart-content">122221312312312321312</div>-->
-<!--           </div>-->
-<!--         </div>-->
-<!--         <div class="chart-right chart-info">-->
-<!--           <div class="chart-content-wrap">-->
-<!--             <div class="username">ljt</div>-->
-<!--             <div class="chart-content">44224</div>-->
-<!--           </div>-->
-<!--           <img src="../../static/images/logo.png" alt="" class="user-avatar">-->
-<!--         </div>-->
-       </div>
-      <div class="chart-input">
-        <el-input
-          type="textarea"
-          autosize
-          resize="none"
-          placeholder="请输入内容"
-          :autosize="{ minRows: 4, maxRows: 4}"
-          v-model="content"
-          @keyup.enter.native="submit">
-        </el-input>
-        <el-button type="primary" class="submit" @click="submit">发送</el-button>
+        <div class="chart-input">
+          <el-input
+            type="textarea"
+            autosize
+            resize="none"
+            placeholder="请输入内容"
+            :autosize="{ minRows: 4, maxRows: 4}"
+            v-model="content"
+            @keyup.enter.native="submit">
+          </el-input>
+          <el-button type="primary" class="submit" @click="submit">发送</el-button>
+        </div>
       </div>
-    </div>
   </div>
 </template>
 
@@ -96,26 +53,54 @@
       return {
         content: '',
         socket: null,
-        chartList: [],
-        userInfo: null
+        chartList: null,
+        userInfo: null,
+        count: 0,
+        tip: '',
+        time: 3,
       }
     },
+    // async asyncData ({ route, $axios, error }) {
+    //   const myData  = await $axios.$get(`/api/chartList`)
+    //   console.log(myData.data, '+++++++++');
+    //   return  {
+    //     chartList: myData.data
+    //   }
+    // },
     mounted() {
-     this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
-     this.getChartList()
-     this.scrollBtm()
-      this.socket = new WebSocket("ws://localhost:3002/socketTest");
-      this.socket.addEventListener("open", (event)=> {
-        console.log("socket is open")
-        // this.socket.send("前端发送消息")
-      });
-      this.socket.addEventListener("message",  (event)=> {
-        console.log("接收到服务端发送的消息了")
-        if (JSON.parse(event.data).code === 200) {
-          console.log(1111);
-          this.getChartList()
-        }
-      });
+      this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+      this.getChartList()
+      this.scrollBtm()
+      if (!this.socket) {
+        this.socket = new WebSocket("ws://localhost:3002/socketTest");
+        this.socket.addEventListener("open", (event)=> {
+          console.log("socket is open")
+          this.socket.send(JSON.stringify({ type:0,username: this.userInfo.username }))
+        });
+        this.socket.addEventListener("message",  (event)=> {
+          console.log("接收到服务端发送的消息了", JSON.parse(event.data))
+          if (JSON.parse(event.data).code === 200) {
+            this.getChartList()
+          }
+          if (JSON.parse(event.data).code === 100) {
+            this.time = 3
+            if (this.count > JSON.parse(event.data).count) {
+              this.tip = `${JSON.parse(event.data).username}离开了群聊`
+            } else {
+              this.tip = `${JSON.parse(event.data).username}加入了群聊`
+            }
+            this.count = JSON.parse(event.data).count
+            let timer = setInterval(()=>{
+              if (this.time > 0 ) {
+                console.log(this.time);
+                this.time--
+              } else {
+                clearInterval(timer)
+              }
+            },1000)
+          }
+        });
+      }
     },
     methods: {
       scrollBtm() {
@@ -131,6 +116,7 @@
           type: 1
         }
         this.socket.send(JSON.stringify(msg))
+        this.content = ''
       },
       async getChartList() {
         const result = await this.$axios.$get('/api/chartList')
@@ -150,8 +136,31 @@
     margin-top: 80px;
     border-radius: 20px;
     background-color: var(--theme-bg-3);
+    position: relative;
+    .online {
+      text-align: center;
+    }
+    .slide-fade-enter-active {
+      transition: all .3s ease;
+    }
+    .slide-fade-leave-active {
+      transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    }
+    .slide-fade-enter, .slide-fade-leave-to
+      /* .slide-fade-leave-active for below version 2.1.8 */ {
+      transform: translateY(-10px);
+      opacity: 0;
+    }
+    .tip {
+      text-align: center;
+      color: #007fff;
+      margin-top: 4px;
+      position: absolute;
+      left: 0;
+      width: 100%;
+    }
     .chart-wrap {
-      height: calc(100% - 120px);
+      height: calc(100% - 140px);
       overflow-y: auto;
       padding: 12px;
       color: var(--color-font-1);
@@ -227,7 +236,7 @@
     }
     .chart-input {
       position: relative;
-      margin-top: 30px;
+      margin-top: 10px;
       .submit {
         position: absolute;
         right: 4px;
