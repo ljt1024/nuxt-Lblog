@@ -15,10 +15,10 @@
                  <div class="username">{{item.username}}</div>
                  <div class="chart-content">{{item.content}}</div>
                </div>
-               <img src="../../static/images/logo.png" alt="" class="user-avatar">
+               <img :src="item.avatar || 'https://img0.baidu.com/it/u=4191846993,2864527902&fm=253&fmt=auto&app=120&f=JPEG?w=360&h=360'" alt="" class="user-avatar">
              </template>
              <template v-else>
-               <img src="../../static/images/logo.png" alt="" class="user-avatar">
+               <img :src="item.avatar || 'https://img0.baidu.com/it/u=4191846993,2864527902&fm=253&fmt=auto&app=120&f=JPEG?w=360&h=360'" alt="" class="user-avatar">
                <div class="chart-content-wrap">
                  <div class="username">{{item.username}}</div>
                  <div class="chart-content">{{item.content}}</div>
@@ -60,13 +60,7 @@
         time: 3,
       }
     },
-    // async asyncData ({ route, $axios, error }) {
-    //   const myData  = await $axios.$get(`/api/chartList`)
-    //   console.log(myData.data, '+++++++++');
-    //   return  {
-    //     chartList: myData.data
-    //   }
-    // },
+
     mounted() {
       this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
       this.getChartList()
@@ -101,6 +95,9 @@
           }
         });
       }
+    },
+    beforeDestroy() {
+      this.socket.close()
     },
     methods: {
       scrollBtm() {
@@ -139,6 +136,7 @@
     position: relative;
     .online {
       text-align: center;
+      color: var(--color-font-1);
     }
     .slide-fade-enter-active {
       transition: all .3s ease;
@@ -241,6 +239,10 @@
         position: absolute;
         right: 4px;
         bottom: 4px;
+      }
+      ::v-deep .el-textarea__inner {
+        background-color: var(--theme-bg-3);
+        color: var(--color-font-1);
       }
     }
   }

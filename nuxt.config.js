@@ -59,7 +59,7 @@ export default {
     proxy: true
   },
   proxy: {
-    "/api": "http://localhost:3002"
+    "/api": "http://localhost:3003"
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
