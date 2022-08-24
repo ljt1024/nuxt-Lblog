@@ -41,7 +41,7 @@
           <client-only>
             <el-button type="primary" size='small' @click="login" v-if="!userInfo">登录</el-button>
             <el-dropdown @command="loginOut" v-else>
-              <img src="../static/images/avatar.png" alt="" class="avatar" >
+              <img src="https://img0.baidu.com/it/u=4191846993,2864527902&fm=253&fmt=auto&app=120&f=JPEG?w=360&h=360" alt="" class="avatar" >
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item icon="el-icon-switch-button" command="loginOut">退出</el-dropdown-item>
               </el-dropdown-menu>
@@ -298,7 +298,8 @@ export default {
         }
         .avatar {
           width: 30px;
-          height: 30  px;
+          height: 30px;
+          border-radius: 50%;
           margin-left: 10px;
           cursor: pointer;
         }
