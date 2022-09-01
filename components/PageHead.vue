@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="header">
-        <div class="logo">
+        <div class="logo" @click='backHome'>
           <img src="../static/images/logo.png" alt="">
           <span class="logo-txt">LBlog</span>
         </div>
@@ -199,6 +199,9 @@ export default {
             message: '未登录!'
           });
         }
+      },
+      backHome() {
+        this.$router.push('home')
       }
     }
 }
