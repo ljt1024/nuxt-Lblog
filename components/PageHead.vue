@@ -53,36 +53,18 @@
           </div>
         </div>
     </div>
-    <el-dialog
-      title="登录"
-      :visible.sync="loginVisible"
-      :center="true"
-      :modal-append-to-body="false"
-      class="loginDialog"
-    >
-      <div>
-        <el-form :model="loginForm" status-icon :rules="rules" ref="ruleForm" label-width="80px" class="loginForm">
-          <el-form-item label="用户名" prop="username">
-            <el-input type="text" v-model="loginForm.username" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="密码" prop="password">
-            <el-input type="password" v-model="loginForm.password" autocomplete="off"></el-input>
-          </el-form-item>
-        </el-form>
-      </div>
-      <span slot="footer" class="dialog-footer">
-         <el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
-         <el-button @click="loginVisible = false">取 消</el-button>
-      </span>
-    </el-dialog>
+    <Login :loginVisible='loginVisible' @changeLogin='changeLogin'/>
     <el-backtop :bottom="100"></el-backtop>
   </div>
 </template>
 
 <script>
 import { setTheme } from '@/utils/theme'
-import md5 from 'js-md5'
+import Login from '@/components/Login'
 export default {
+    components: {
+      Login
+    },
     name: "PageHead",
     props: {
       active: {
@@ -96,27 +78,14 @@ export default {
         key: '',
         value: true,
         mode: 'light',
-        loginVisible: false,
-        loginForm: {
-          username: '',
-          password: ''
-        },
-        rules: {
-          username: [
-            { required: true, message: '请输入用户名', trigger: ['blur', 'change'] }
-          ],
-          password: [
-            { required: true, message: '请输入密码', trigger: ['blur', 'change'] }
-          ],
-        },
-        userInfo: {}
+        userInfo: {},
+        loginVisible: false
       }
     },
   mounted() {
     this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
     if (localStorage.getItem('token')) {
       this.$axios.$get('/api/user/profile').then(res => {
-
       })
     }
     let mode = localStorage.getItem('theme')
@@ -138,35 +107,10 @@ export default {
       },
       login() {
         this.loginVisible = true
+        this.$store.commit('user/showLogin', true)
       },
-      submitForm() {
-        this.$refs['ruleForm'].validate((valid) => {
-          if (valid) {
-            this.$axios.$post(`/api/user/login`, {username:this.loginForm.username, password: md5(this.loginForm.password)}).then(res=>{
-              console.log(res);
-              localStorage.setItem('token', res.data.token)
-              if (res.data.token) {
-                this.getUser(res.data.token)
-              }
-            })
-          } else {
-            return false;
-          }
-        });
-      },
-      getUser() {
-        this.$axios.$get('/api/user/profile').then(res => {
-          this.loginVisible = false
-          this.$notify({
-            title: '提示',
-            message: '登录成功',
-            type: 'success'
-          });
-         localStorage.setItem('userInfo', JSON.stringify(res.data.user))
-          setTimeout(()=>{
-            window.location.reload()
-          }, 500)
-        })
+      changeLogin(value) {
+        this.loginVisible = value
       },
       loginOut(command) {
         this.$confirm('是否退出当前账号, 是否继续?', '提示', {
@@ -201,7 +145,7 @@ export default {
         }
       },
       backHome() {
-        this.$router.push('home')
+        this.$router.push('/')
       }
     }
 }
@@ -305,17 +249,6 @@ export default {
           border-radius: 50%;
           margin-left: 10px;
           cursor: pointer;
-        }
-      }
-    }
-    .loginDialog {
-      width: 700px;
-      margin: 0 auto;
-    }
-    ::v-deep .el-dialog__body {
-      .loginForm {
-        width: 100%;
-        .loginBtn {
         }
       }
     }
