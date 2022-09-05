@@ -20,7 +20,7 @@
         </div>
         <div style="white-space:pre-wrap">{{article.content}}</div>
       </div>
-      <Comment/>
+      <Comment :articleId="article.id"/>
     </div>
   </div>
 </template>

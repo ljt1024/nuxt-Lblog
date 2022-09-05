@@ -14,29 +14,45 @@
               :autosize="{ minRows: 3, maxRows: 3}"/>
           </el-form-item>
           <div class="submit-btn" v-show="showBtn">
-            <el-button type="primary" size="small" :disabled="disabled">发表评论</el-button>
+            <el-button type="primary" size="small" :disabled="disabled" @click="comment">发表评论</el-button>
             <span class="text">Ctrl + Enter</span>
           </div>
         </el-form>
       </div>
-      <div class="comment-list">
+      <div class="comment-list" v-if="commentList.length > 0">
         <div class="tit">
-          全部评论<span class="comment-total">1</span>
+          全部评论<span class="comment-total">{{commentList.length}}</span>
         </div>
-        <div class="comment-item">
+        <div class="comment-item" v-for="item in commentList" :key="item.id">
           <div class="user-avatar">
-            <img src="../static/images/user.svg" alt="">
+            <img :src="item.userInfo.avatar||require('../static/images/user.svg')" alt="">
           </div>
           <div class="comment-info">
             <div class="user-info">
-              <div class="username">ljt</div>
-              <div class="time">8小时前</div>
+              <div class="username">{{item.userInfo.username}}</div>
+              <div class="time">{{formatTime(item.createTime)}}</div>
             </div>
-            <div class="content">666</div>
+            <div class="content">{{item.commentContent}}</div>
             <div class="handle">
               <span><i class="icon el-icon-thumb"></i>点赞</span>
-              <span><i class="icon el-icon-chat-dot-square"></i>回复</span>
+<!--              <span @click="replay"><i class="icon el-icon-chat-dot-square"></i>{{showReply?'取消回复':'回复'}}</span>-->
             </div>
+<!--            <el-form class="form" v-show="showReply" >-->
+<!--              <el-form-item >-->
+<!--                <el-input-->
+<!--                  type="textarea"-->
+<!--                  v-model="replyForm.content"-->
+<!--                  placeholder="回复ljt"-->
+<!--                  resize="none"-->
+<!--                  @focus="focus"-->
+<!--                  ref="intDom"-->
+<!--                  :autosize="{ minRows: 3, maxRows: 3}"/>-->
+<!--              </el-form-item>-->
+<!--              <div class="submit-btn">-->
+<!--                <el-button type="primary" size="small" :disabled="replyDisabled">发表评论</el-button>-->
+<!--                <span class="text">Ctrl + Enter</span>-->
+<!--              </div>-->
+<!--            </el-form>-->
           </div>
         </div>
       </div>
@@ -44,26 +60,29 @@
 </template>
 
 <script>
+import { formatTime } from '@/utils'
 export default {
+  props: {
+    articleId: {
+      type: String
+    }
+  },
   name: "Comment",
   data() {
     return {
       form: {
         content: ''
       },
+      replyForm: {
+        content: ''
+      },
       userInfo: {},
       showBtn: false,
-      disabled: true
+      disabled: true,
+      replyDisabled: true,
+      showReply: false,
+      commentList: []
     }
-  },
-  methods: {
-    focus() {
-      if (!this.userInfo) {
-        this.$store.commit('user/showLogin', true)
-      } else {
-          this.showBtn = true
-      }
-    },
   },
   watch: {
     'form.content'(value) {
@@ -71,6 +90,13 @@ export default {
         this.disabled = false
       } else {
         this.disabled = true
+      }
+    },
+    'replyForm.content'(value) {
+      if (value.length > 0) {
+        this.replyDisabled = false
+      } else {
+        this.replyDisabled = true
       }
     }
   },
@@ -85,7 +111,46 @@ export default {
     form.addEventListener('click', (e)=> {
       event.stopPropagation()
     })
+    this.getComment()
   },
+  methods: {
+    formatTime(value) {
+      return formatTime(value)
+    },
+    async getComment() {
+      const res  = await this.$axios.$get(`/api/commentList`, {params:{id:this.articleId}})
+      this.commentList = res.data
+    },
+    focus() {
+      if (!this.userInfo) {
+        this.$store.commit('user/showLogin', true)
+      } else {
+          this.showBtn = true
+      }
+    },
+    replay() {
+      this.showReply = !this.showReply
+      this.$nextTick(()=>{
+        this.$refs.intDom.focus()
+      })
+    },
+    async comment() {
+      let parmas = {
+        articleId: this.articleId,
+        userInfo: this.userInfo,
+        commentContent: this.form.content
+      }
+      const res  = await this.$axios.$post(`/api/sendComment`, parmas)
+      if (res.code === 200) {
+        this.$message({
+          message: '评论成功!',
+          type: 'success'
+        });
+        this.form.content = ''
+        return this.getComment()
+      }
+    }
+  }
 }
 </script>
 
@@ -95,6 +160,24 @@ export default {
   border-radius: 4px;
   background-color: #fff;
   padding:2rem 2.67rem;
+  .form {
+    flex: 1;
+    ::v-deep .el-form-item {
+      margin-bottom: 10px;
+    }
+    .submit-btn {
+      display: flex;
+      align-items: center;
+      flex-direction: row-reverse;
+      .text {
+        font-size: 14px;
+        line-height: 22px;
+        letter-spacing: .2px;
+        color: #86909c;
+        margin-right: 16px;
+      }
+    }
+  }
   .tit {
     font-size: 18px;
     line-height: 30px;
@@ -104,6 +187,10 @@ export default {
   }
   .comment-form {
     display: flex;
+    ::v-deep .el-textarea__inner {
+      background-color: #f2f3f5;
+      color: #8a919f;
+    }
     img {
       width: 40px;
       height: 40px;
@@ -111,29 +198,6 @@ export default {
       border-radius: 50%;
       display: inline-block;
     }
-    .form {
-      flex: 1;
-      ::v-deep .el-textarea__inner {
-        background-color: #f2f3f5;
-        color: #8a919f;
-      }
-      ::v-deep .el-form-item {
-        margin-bottom: 10px;
-      }
-      .submit-btn {
-        display: flex;
-        align-items: center;
-        flex-direction: row-reverse;
-        .text {
-          font-size: 14px;
-          line-height: 22px;
-          letter-spacing: .2px;
-          color: #86909c;
-          margin-right: 16px;
-        }
-      }
-    }
-
   }
   .comment-list {
     margin-top: 20px;
@@ -142,6 +206,7 @@ export default {
     }
     .comment-item {
       display: flex;
+      margin-bottom: 10px;
       .user-avatar {
         img {
           width: 40px;
@@ -183,8 +248,10 @@ export default {
         .handle {
           display: flex;
           margin-top: 8px;
-          icon {
+          margin-bottom: 8px;
+          .icon {
             font-size: 16px;
+            margin-right: 4px;
           }
           span {
             margin-right: 16px;
