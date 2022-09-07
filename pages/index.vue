@@ -11,7 +11,7 @@
             </ul>
           </div>
           <div class="list">
-<!--            <el-skeleton :rows="6" animated :loading="articleList.length === 0"/>-->
+            <el-skeleton :rows="6" animated :loading="articleLoading"/>
             <ul>
               <li class="item" v-for="item in articleList" :key="item.id" @click="turnDetail(item.id)">
                   <div class="release-info">
@@ -50,6 +50,7 @@
                   </div>
               </li>
             </ul>
+            <el-empty :image-size="200" description="暂无内容" v-if="articleList.length === 0 && !articleLoading  "></el-empty>
           </div>
         </div>
         <aside class="index-aside aside">
@@ -65,6 +66,7 @@
                         effect="dark"
                         class="tag-item"
                         v-for="(item, index) in tagList"
+                        @click="selectTag(item)"
                         :key="item.id">
                   {{item.columnName}}
                 </el-tag>
@@ -86,7 +88,6 @@ export default {
     PageHead
   },
   async asyncData ({ route, $axios, error }) {
-    // console.log(process.server);
     try {
         const myData  = await $axios.$get(`/api/columnList`)
         const articleList = await $axios.$get(`/api/articleList`)
@@ -116,12 +117,22 @@ export default {
       type: ['default', 'success', 'info', 'warning', 'danger'],
       articleList: [],
       tagLoading: false,
-      listSkeleton: true
+      articleLoading: false
     }
   },
   methods: {
     turnDetail(id) {
       this.$router.push({path: '/article', query: {id}})
+    },
+    selectTag(value) {
+      this.articleLoading = true
+      this.articleList = []
+      this.$axios.$get(`/api/articleList`,{params:{category:value.columnName}}).then(res=>{
+        setTimeout(()=> {
+          this.articleList = res.data
+          this.articleLoading = false
+        },500)
+      })
     }
   }
 }

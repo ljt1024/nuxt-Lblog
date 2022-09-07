@@ -11,6 +11,7 @@
               placeholder="输入评论(Enter换行, Ctrl + Enter发送)"
               resize="none"
               @focus="focus"
+              @keydown.native="keydown($event)"
               :autosize="{ minRows: 3, maxRows: 3}"/>
           </el-form-item>
           <div class="submit-btn" v-show="showBtn">
@@ -23,7 +24,7 @@
         <div class="tit">
           全部评论<span class="comment-total">{{commentList.length}}</span>
         </div>
-        <div class="comment-item" v-for="item in commentList" :key="item.id">
+        <div class="comment-item" v-for="(item, index) in commentList" :key="item.id">
           <div class="user-avatar">
             <img :src="item.userInfo.avatar||require('../static/images/user.svg')" alt="">
           </div>
@@ -34,7 +35,10 @@
             </div>
             <div class="content">{{item.commentContent}}</div>
             <div class="handle">
-              <span><i class="icon el-icon-thumb"></i>点赞</span>
+              <span @click="thumb(item, index)" :class="item.isLike?'isLike' : ''">
+                <i class="icon el-icon-thumb"></i>
+                {{item.thumbs > 0 ? item.thumbs : '点赞'}}
+              </span>
 <!--              <span @click="replay"><i class="icon el-icon-chat-dot-square"></i>{{showReply?'取消回复':'回复'}}</span>-->
             </div>
 <!--            <el-form class="form" v-show="showReply" >-->
@@ -61,6 +65,7 @@
 
 <script>
 import { formatTime } from '@/utils'
+let keyChache = new Map()
 export default {
   props: {
     articleId: {
@@ -128,6 +133,17 @@ export default {
           this.showBtn = true
       }
     },
+    keydown(e) {
+      if (e.key === 'Control') {
+        keyChache.set('ctrlKey', true)
+      } else {
+        if (e.key === 'Enter' && keyChache.has('ctrlKey') && !this.disabled) {
+          this.comment()
+        } else {
+          keyChache.delete('ctrlKey')
+        }
+      }
+    },
     replay() {
       this.showReply = !this.showReply
       this.$nextTick(()=>{
@@ -140,7 +156,7 @@ export default {
         userInfo: this.userInfo,
         commentContent: this.form.content
       }
-      const res  = await this.$axios.$post(`/api/sendComment`, parmas)
+      const res = await this.$axios.$post('/api/sendComment', parmas)
       if (res.code === 200) {
         this.$message({
           message: '评论成功!',
@@ -149,6 +165,17 @@ export default {
         this.form.content = ''
         return this.getComment()
       }
+    },
+    async thumb(value, index) {
+        await this.$axios.post('/api/updateLike',{id: value._id})
+        const contentChild = value
+        value.isLike = !value.isLike
+        if (value.isLike) {
+          contentChild.thumbs++
+        } else if(contentChild.thumbs > 0){
+          contentChild.thumbs--
+        }
+        this.$set(this.commentList, index, contentChild)
     }
   }
 }
@@ -158,7 +185,7 @@ export default {
 .comment-wrap {
   margin-top: 20px;
   border-radius: 4px;
-  background-color: #fff;
+  background-color: var(--theme-bg-3);
   padding:2rem 2.67rem;
   .form {
     flex: 1;
@@ -183,12 +210,13 @@ export default {
     line-height: 30px;
     font-weight: 600;
     margin-bottom: 2rem;
-    color: #252933;
+    /*color: #252933;*/
+    color: var(--color-font-8);
   }
   .comment-form {
     display: flex;
     ::v-deep .el-textarea__inner {
-      background-color: #f2f3f5;
+      background-color: var(--theme-bg-4);
       color: #8a919f;
     }
     img {
@@ -223,7 +251,8 @@ export default {
           .username {
             font-weight: 500;
             font-size: 15px;
-            color: #252933;
+            color: var(--color-font-8);
+            /*color: #252933;*/
             max-width: 90px;
             line-height: 26px;
           }
@@ -237,7 +266,7 @@ export default {
           font-weight: 400;
           font-size: 14px;
           line-height: 2rem;
-          color: #515767;
+          color: var(--color-font-9);
           margin-top: 8px;
           -webkit-line-clamp: 6;
           display: -webkit-box;
@@ -249,6 +278,9 @@ export default {
           display: flex;
           margin-top: 8px;
           margin-bottom: 8px;
+          .isLike {
+            color: #007fff;
+          }
           .icon {
             font-size: 16px;
             margin-right: 4px;
