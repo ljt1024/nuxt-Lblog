@@ -36,7 +36,7 @@
             <div class="content">{{item.commentContent}}</div>
             <div class="handle">
               <span @click="thumb(item, index)" :class="item.isLike?'isLike' : ''">
-                <i class="icon el-icon-thumb"></i>
+                <i class="icon iconfont icon-zan"></i>
                 {{item.thumbs > 0 ? item.thumbs : '点赞'}}
               </span>
 <!--              <span @click="replay"><i class="icon el-icon-chat-dot-square"></i>{{showReply?'取消回复':'回复'}}</span>-->
@@ -163,6 +163,7 @@ export default {
           type: 'success'
         });
         this.form.content = ''
+        this.$emit('getDetail', this.articleId)
         return this.getComment()
       }
     },

@@ -24,6 +24,7 @@ export default {
   css: [
     'element-ui/lib/theme-chalk/index.css',
     'static/common.css',
+    'static/iconfont.css',
     {src: '~static/index.scss', lang: 'scss'} // 指定
   ],
 

@@ -2,25 +2,28 @@
   <div>
     <PageHead/>
     <div class="main">
-      <div class="wrap">
-        <h1 class="tit">{{article.title}}</h1>
-        <div class="author">
-          <a href="#">
-            <img src="../../static/images/logo.png" alt=""/>
-          </a>
-          <div>
-            <a href="" class="username">
-              ljt
+      <Side :article="article"/>
+      <div>
+        <div class="wrap">
+          <h1 class="tit">{{article.title}}</h1>
+          <div class="author">
+            <a href="#">
+              <img src="../../static/images/logo.png" alt=""/>
             </a>
-            <div class="btm">
-              <span class="time">{{article.creatTime}}</span>
-              <span class="">阅读数：{{article.readNum}}</span>
+            <div>
+              <a href="" class="username">
+                ljt
+              </a>
+              <div class="btm">
+                <span class="time">{{article.creatTime}}</span>
+                <span class="">阅读数：{{article.readNum}}</span>
+              </div>
             </div>
           </div>
+          <div style="white-space:pre-wrap">{{article.content}}</div>
         </div>
-        <div style="white-space:pre-wrap">{{article.content}}</div>
+        <Comment :articleId="article.id" @getDetail="getDetail"/>
       </div>
-      <Comment :articleId="article.id"/>
     </div>
   </div>
 </template>
@@ -28,11 +31,13 @@
 <script>
   import PageHead from "@/components/PageHead";
   import Comment from "@/components/Comment";
+  import Side from "@/components/Side";
   export default {
     name: "index",
     components: {
       PageHead,
-      Comment
+      Comment,
+      Side
     },
     data() {
       return {
@@ -45,6 +50,12 @@
           article:myData.data[0]
         }
     },
+    methods: {
+      async getDetail(id) {
+         const result = await this.$axios.$get(`/api/articleList/?id=${id}`)
+         this.article = result.data[0]
+      }
+    }
   }
 </script>
 
@@ -53,6 +64,7 @@
     padding: 1.3rem 1rem;
     max-width: 960px;
     margin: 60px auto 0 auto;
+    display: flex;
     .wrap {
       background-color: var(--theme-bg-3);
       padding: 2.667rem 2rem 3.33rem;

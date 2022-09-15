@@ -55,33 +55,37 @@
     </div>
     <Login :loginVisible='loginVisible' @changeLogin='changeLogin'/>
     <el-backtop :bottom="100"></el-backtop>
+    <ProgressBar/>
   </div>
 </template>
 
 <script>
 import { setTheme } from '@/utils/theme'
 import Login from '@/components/Login'
+import ProgressBar from "@/components/ProgressBar"
 export default {
-    components: {
-      Login
+  components: {
+    Login,
+    ProgressBar
+  },
+  name: "PageHead",
+  props: {
+    active: {
+      type: [String, Number],
+      default: '0',
     },
-    name: "PageHead",
-    props: {
-      active: {
-        type: [String, Number],
-        default: '0',
-      },
-    },
-    data() {
-      return {
-        activeIndex: this.active + '',
-        key: '',
-        value: true,
-        mode: 'light',
-        userInfo: {},
-        loginVisible: false
-      }
-    },
+  },
+  data() {
+    return {
+      activeIndex: this.active + '',
+      key: '',
+      value: true,
+      mode: 'light',
+      userInfo: {},
+      loginVisible: false,
+      width: '0%'
+    }
+  },
   mounted() {
     this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
     if (localStorage.getItem('token')) {
