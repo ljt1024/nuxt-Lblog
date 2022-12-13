@@ -3,7 +3,7 @@
     <PageHead/>
     <div class="main">
       <Side :article="article"/>
-      <div>
+      <div class="content">
         <div class="wrap">
           <h1 class="tit">{{article.title}}</h1>
           <div class="author">
@@ -45,15 +45,20 @@
       }
     },
     async asyncData ({ route, $axios, error }) {
-      const myData  = await $axios.$get(`/api/articleList/?id=${route.query.id}`)
+      console.log('asyncData')
+      const myData = await $axios.$get(`/api/detailArticle/?id=${route.query.id}`)
       return  {
-          article:myData.data[0]
-        }
+          article: myData.data
+      }
     },
+    // async mounted() {
+    //   const myData  = await this.$axios.$get(`/api/detailArticle/?id=${this.$route.query.id}`)
+    //    this.article =  myData.data
+    // },
     methods: {
       async getDetail(id) {
-         const result = await this.$axios.$get(`/api/articleList/?id=${id}`)
-         this.article = result.data[0]
+         const result = await this.$axios.$get(`/api/detailArticle/?id=${id}`)
+         this.article = result.data
       }
     }
   }
@@ -65,6 +70,9 @@
     max-width: 960px;
     margin: 60px auto 0 auto;
     display: flex;
+    .content {
+      width: 100%;
+    }
     .wrap {
       background-color: var(--theme-bg-3);
       padding: 2.667rem 2rem 3.33rem;

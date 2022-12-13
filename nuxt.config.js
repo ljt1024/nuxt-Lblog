@@ -49,10 +49,15 @@ export default {
   buildModules: [
   ],
 
+  router: {
+    middleware: 'header'
+  },
+
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/axios',
-    '@nuxtjs/style-resources'
+    '@nuxtjs/style-resources',
+    'cookie-universal-nuxt'
   ],
   styleResources: {
     scss: './static/index.scss'

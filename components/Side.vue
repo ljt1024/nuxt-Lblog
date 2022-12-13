@@ -2,8 +2,8 @@
     <div class="aside-wrap">
       <ul>
         <li>
-          <el-badge :value="article.thumbs" :type="article.isLike?'primary':'info'" class="badge">
-            <div :class="article.isLike?['isLike','panel-btn'] : 'panel-btn'" @click="thumb">
+          <el-badge :value="article.thumbs" :type="article.isFlower ? 'primary':'info'" class="badge">
+            <div :class="article.isFlower ? ['isLike','panel-btn'] : 'panel-btn'" @click="thumb">
               <i class="icon iconfont icon-zan-shen"></i>
             </div>
           </el-badge>
@@ -30,14 +30,24 @@
       },
       methods: {
         async thumb() {
-          await this.$axios.post('/api/article/updateLike',{id: this.article.id})
-          let thumbs = this.article.thumbs
-          if (this.article.isLike) {
-            thumbs++
-          } else if(thumbs > 0){
-           thumbs--
+          const userId = JSON.parse(localStorage.getItem('userInfo')).id
+          if (!userId) {
+            this.$store.commit('user/showLogin', true)
+            return
           }
-          this.$set(this.article, 'thumbs',thumbs)
+          const result =  await this.$axios.post('/api/article/thumb',{articleId: this.article.id, userId})
+          let thumbs = this.article.thumbs
+          let isFlower = this.article.isFlower
+          if (result.data.code === 200) {
+            if (isFlower) {
+              thumbs = Math.max(0 , --thumbs)
+              this.$set(this.article, 'isFlower', false)
+            } else {
+              thumbs++
+              this.$set(this.article, 'isFlower', true)
+            }
+          }
+          this.$set(this.article, 'thumbs', thumbs)
         }
       }
     }

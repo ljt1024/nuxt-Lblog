@@ -88,7 +88,7 @@ export default {
   },
   mounted() {
     this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
-    if (localStorage.getItem('token')) {
+    if (this.$cookies.get('token')) {
       this.$axios.$get('/api/user/profile').then(res => {
       })
     }
@@ -123,7 +123,7 @@ export default {
           type: 'warning'
         }).then(() => {
           localStorage.removeItem('userInfo')
-          localStorage.removeItem('token')
+          app.$cookies.remove('token')
           this.$message({
             type: 'success',
             message: '已退出!'
@@ -139,7 +139,7 @@ export default {
         });
       },
       toWrite() {
-        if (localStorage.getItem('token')) {
+        if (this.$cookies.get("token")) {
             this.$router.push('write')
         } else {
           this.$message({
@@ -175,6 +175,7 @@ export default {
         display: flex;
         align-items: center;
         background-color: var(--theme-bg);
+        cursor: pointer;
         img {
           width: 50px;
           height: 50px;

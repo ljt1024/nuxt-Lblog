@@ -1,7 +1,7 @@
 <template>
     <div>
-      <PageHead :active="1"/>
-      <div class="content">
+      <PageHead :active="1" />
+      <div class="content" >
         <div class="content-left">
           <div class="classify">
             <ul>
@@ -50,8 +50,9 @@
                   </div>
               </li>
             </ul>
-            <el-empty :image-size="200" description="暂无内容" v-if="articleList.length === 0 && !articleLoading  "></el-empty>
+            <el-empty :image-size="200" description="暂无内容" v-if="articleList.length === 0 && !articleLoading "></el-empty>
           </div>
+          <NoData/>
         </div>
         <aside class="index-aside aside">
             <div class="time">
@@ -79,8 +80,10 @@
 </template>
 
 <script>
-import PageHead from "@/components/PageHead";
+import PageHead from "@/components/PageHead"
+import NoData from "@/components/NoData"
 import { timeFix } from '@/utils/index'
+
 let timer
 export default {
   name: "index",
@@ -117,7 +120,7 @@ export default {
       type: ['default', 'success', 'info', 'warning', 'danger'],
       articleList: [],
       tagLoading: false,
-      articleLoading: false
+      articleLoading: false,
     }
   },
   methods: {
@@ -145,13 +148,13 @@ export default {
   margin: 60px auto 0 auto;
   display: flex;
   .content-left {
-    margin-right: 10px;
+    margin-right: 16px;
     border-radius: 2px;
     width: 700px;
-    background-color: var(--theme-bg-3);
   }
   .classify {
     padding: 1.3rem 1rem;
+    background-color: var(--theme-bg-3);
     border-bottom: 1px solid hsla(0,0%,59.2%,.1);
     ul {
       display: flex;
@@ -171,6 +174,7 @@ export default {
     }
   }
   .list {
+    background-color: var(--theme-bg-3);
     ul {
       .item {
         cursor: pointer;

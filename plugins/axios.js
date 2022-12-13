@@ -1,12 +1,13 @@
 import { Message } from 'element-ui'
-export default function({ $axios, redirect }) {
+export default function({ $axios, redirect, app }) {
   // request interceptor
   $axios.interceptors.request.use(
-
     config => {
       // do something before request is sent
-      if (localStorage.getItem('token')) {
-        config.headers['Authorization'] = localStorage.getItem('token')
+
+      const token = app.$cookies.get('token')
+      if (token) {
+        config.headers['Authorization'] = token
       }
       return config
     },
@@ -16,8 +17,7 @@ export default function({ $axios, redirect }) {
     }
   )
   $axios.onRequest(config => {
-    console.log(config);
-    console.log('Making request to ' + config.url)
+
   })
 
   // response interceptor
@@ -33,7 +33,8 @@ export default function({ $axios, redirect }) {
         return response
       } else if (res.code === 205){
         Message.error(response.data.msg)
-        localStorage.removeItem('token')
+        app.$cookies.remove('token')
+        // localStorage.removeItem('token')
         localStorage.removeItem('userInfo')
         setTimeout(()=>{
           window.location.reload()

@@ -81,7 +81,8 @@
             if (valid) {
               this.$axios.$post(`/api/user/login`, {username:this.loginForm.username, password: md5(this.loginForm.password)}).then(res=>{
                 console.log(res);
-                localStorage.setItem('token', res.data.token)
+                this.$cookies.set('token', res.data.token)
+                // localStorage.setItem('token', res.data.token)
                 if (res.data.token) {
                   this.getUser(res.data.token)
                 }
