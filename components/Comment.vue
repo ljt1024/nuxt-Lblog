@@ -168,7 +168,7 @@ export default {
       }
     },
     async thumb(value, index) {
-        await this.$axios.post('/api/updateLike',{id: value._id})
+        await this.$axios.post('/api/comment/thumb',{ commentId: value._id, userId: this.userInfo.id })
         const contentChild = value
         value.isLike = !value.isLike
         if (value.isLike) {

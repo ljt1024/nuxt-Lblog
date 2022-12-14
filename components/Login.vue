@@ -6,6 +6,7 @@
         :center="true"
         :modal-append-to-body="false"
         class="loginDialog"
+        @close="close"
       >
         <div>
           <el-form :model="loginForm" status-icon :rules="rules" ref="ruleForm" label-width="80px" class="loginForm">
@@ -55,16 +56,6 @@
           loginVisible: false
         }
       },
-      // watch: {
-      //   loginVisible(value) {
-      //     this.loginVisibles = value
-      //   },
-      //   loginVisibles(value) {
-      //     if (!value) {
-      //       this.$emit('changeLogin', value)
-      //     }
-      //   }
-      // },
       watch: {
           '$store.state.user.showLogin'(value) {
             this.loginVisible = value
@@ -106,6 +97,10 @@
             }, 500)
           })
         },
+        close() {
+          // 关闭之前清除验证信息
+          this.$refs['ruleForm'].clearValidate()
+        }
       }
   }
 </script>

@@ -35,7 +35,7 @@
             this.$store.commit('user/showLogin', true)
             return
           }
-          const result =  await this.$axios.post('/api/article/thumb',{articleId: this.article.id, userId: userInfo.userId})
+          const result = await this.$axios.post('/api/article/thumb',{articleId: this.article.id, userId: userInfo.id})
           let thumbs = this.article.thumbs
           let isFlower = this.article.isFlower
           if (result.data.code === 200) {
