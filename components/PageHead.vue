@@ -88,7 +88,7 @@ export default {
   },
   mounted() {
     this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
-    if (this.$cookies.get('token')) {
+    if (this.userInfo) {
       this.$axios.$get('/api/user/profile').then(res => {
       })
     }
@@ -123,7 +123,7 @@ export default {
           type: 'warning'
         }).then(() => {
           localStorage.removeItem('userInfo')
-          app.$cookies.remove('token')
+          this.$cookies.remove('token')
           this.$message({
             type: 'success',
             message: '已退出!'

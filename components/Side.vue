@@ -30,12 +30,12 @@
       },
       methods: {
         async thumb() {
-          const userId = JSON.parse(localStorage.getItem('userInfo')).id
-          if (!userId) {
+          const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+          if (!userInfo) {
             this.$store.commit('user/showLogin', true)
             return
           }
-          const result =  await this.$axios.post('/api/article/thumb',{articleId: this.article.id, userId})
+          const result =  await this.$axios.post('/api/article/thumb',{articleId: this.article.id, userId: userInfo.userId})
           let thumbs = this.article.thumbs
           let isFlower = this.article.isFlower
           if (result.data.code === 200) {
