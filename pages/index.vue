@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <div v-loadmore="loadmore">
       <PageHead :active="1" />
-      <div class="content" >
+      <div class="content">
         <div class="content-left">
           <div class="classify">
             <ul>
@@ -13,7 +13,8 @@
           <div class="list">
             <el-skeleton :rows="6" animated :loading="articleLoading"/>
             <ul>
-              <li class="item" v-for="item in articleList" :key="item.id" @click="turnDetail(item.id)">
+              <li class="item" v-for="item in articleList" :key="item.id" >
+                <nuxt-link target="_blank" :to="{name:'article' , query: {id: item.id}}" >
                   <div class="release-info">
                     <ul>
                       <li class="user">{{item.author}}</li>
@@ -48,11 +49,12 @@
                     </div>
                     <img :src="item.img" alt="" class="lazy thumb">
                   </div>
+                </nuxt-link>
               </li>
             </ul>
             <el-empty :image-size="200" description="暂无内容" v-if="articleList.length === 0 && !articleLoading "></el-empty>
           </div>
-          <NoData/>
+          <NoData :text="loadText" />
         </div>
         <aside class="index-aside aside">
             <div class="time">
@@ -93,10 +95,15 @@ export default {
   async asyncData ({ route, $axios, error }) {
     try {
         const myData  = await $axios.$get(`/api/columnList`)
-        const articleList = await $axios.$get(`/api/articleList`)
+        const articleList = await $axios.$get(`/api/articleList`,
+          {params: {
+                page: 1,
+                rows: 5
+          }})
          return  {
-          tagList:myData.data,
+          tagList: myData.data,
           articleList: articleList.data,
+          allPage: articleList.totalPage
         }
     }catch (e) {
       console.log(e);
@@ -121,6 +128,10 @@ export default {
       articleList: [],
       tagLoading: false,
       articleLoading: false,
+      currentPage: 1,
+      rows: 5,
+      allPage: null,
+      loadText: '加载中'
     }
   },
   methods: {
@@ -135,6 +146,19 @@ export default {
           this.articleList = res.data
           this.articleLoading = false
         },500)
+      })
+    },
+    loadmore() {
+      if (this.currentPage++ < this.allPage) {
+        this.loadText = '加载中'
+        this.loadArticle()
+      } else {
+        this.loadText = '我是有底线的!'
+      }
+    },
+    loadArticle() {
+      this.$axios.$get(`/api/articleList`,{params:{ page: this.currentPage, rows: this.rows}}).then(res=>{
+          this.articleList = [...this.articleList, ...res.data]
       })
     }
   }

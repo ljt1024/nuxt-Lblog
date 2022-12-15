@@ -39,6 +39,9 @@ export default {
     {
       src: "@/plugins/vue2-editor.js",
       ssr: false
+    },
+    {
+      src: "@/plugins/loadmore.js"
     }
   ],
 

@@ -1,14 +1,19 @@
 <template>
   <div>
      <div class="no-data">
-       <span class="text">我是有底线的!</span>
+       <span class="text">{{text}}</span>
      </div>
   </div>
 </template>
 
 <script>
     export default {
-        name: "NoData"
+        name: "NoData",
+        props: {
+          text: {
+            type: String
+          }
+        }
     }
 </script>
 
