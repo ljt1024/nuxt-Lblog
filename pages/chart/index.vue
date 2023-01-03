@@ -216,11 +216,12 @@
           padding: 6px 8px;
           position: relative;
           background-color: #409EFE;
-          text-align: center;
           line-height: 25px;
           display: inline-block;
           color: #fff;
           font-size: 15px;
+          word-break: break-all;
+          max-width: 400px;
         }
         .chart-content::after {
           content: "";

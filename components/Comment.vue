@@ -168,6 +168,10 @@ export default {
       }
     },
     async thumb(value, index) {
+        if (!this.userInfo) {
+          this.$store.commit('user/showLogin', true)
+          return
+        }
         await this.$axios.post('/api/comment/thumb',{ commentId: value._id, userId: this.userInfo.id })
         const contentChild = value
         value.isLike = !value.isLike

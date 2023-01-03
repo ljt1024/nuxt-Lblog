@@ -54,7 +54,7 @@
         </div>
     </div>
     <Login :loginVisible='loginVisible' @changeLogin='changeLogin'/>
-    <el-backtop :bottom="100"></el-backtop>
+    <el-backtop :bottom="100" target="body"></el-backtop>
     <ProgressBar/>
   </div>
 </template>
