@@ -10,9 +10,11 @@
         </li>
         <li>
           <el-badge :value="article.comments" type="info" class="badge">
-            <div class="panel-btn">
-              <i class="icon el-icon-s-comment"></i>
-            </div>
+            <a href="#comment">
+              <div class="panel-btn">
+                <i class="icon el-icon-s-comment"></i>
+              </div>
+            </a>
           </el-badge>
         </li>
       </ul>

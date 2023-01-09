@@ -1,5 +1,5 @@
 <template>
-    <div class="comment-wrap">
+    <div class="comment-wrap" id="comment">
       <div class="tit">评论</div>
       <div class="comment-form">
         <img :src="userInfo?userInfo.avatar:require('../static/images/user.svg')" alt="">
@@ -123,7 +123,7 @@ export default {
       return formatTime(value)
     },
     async getComment() {
-      const res  = await this.$axios.$get(`/api/commentList`, {params:{id:this.articleId}})
+      const res  = await this.$axios.$get(`/api/commentList`, {params:{id:this.articleId,userId: this.userInfo.id}})
       this.commentList = res.data
     },
     focus() {
