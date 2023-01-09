@@ -12,10 +12,10 @@
           }
         },
         mounted() {
-          window.onscroll = ()=> {
-            this.width = document.documentElement.scrollTop / (document.documentElement.scrollHeight - document.documentElement.clientHeight ) * 100
+          document.body.addEventListener('scroll',()=> {
+            this.width = document.body.scrollTop / (document.body.scrollHeight - document.body.clientHeight ) * 100
             this.width = this.width > 100 ? '100%' : this.width + '%'
-          }
+          })
         }
     }
 </script>
