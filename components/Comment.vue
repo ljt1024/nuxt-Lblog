@@ -123,7 +123,7 @@ export default {
       return formatTime(value)
     },
     async getComment() {
-      const res  = await this.$axios.$get(`/api/commentList`, {params:{id:this.articleId,userId: this.userInfo.id}})
+      const res  = await this.$axios.$get(`/api/commentList`, {params:{id:this.articleId,userId: this.userInfo?.id}})
       this.commentList = res.data
     },
     focus() {
